@@ -13,28 +13,37 @@
 
 #define NORMAL 0
 #define RECURSIVELY 1
+#define VERBOSE 2
 
 int mode = NORMAL;
+
 extern int optind;
 
 int main(int argc, char *argv[])
 {
   int c;
 
-  while ((c = getopt (argc, argv, "rh")) != -1) {
+  while ((c = getopt (argc, argv, "rhv")) != -1) {
     switch (c) {
     case 'r':
-      mode = RECURSIVELY;
-      /* printf("option: recursively cleaning\n"); */
+      mode = mode | RECURSIVELY;
       break;
     case 'h':
       printf("Usage: dirclean [-r] [directory]\n");
       printf("\t-r:\tcleaning recursively\n");
+      printf("\t-v:\tverbose mode\n");
       return 0;
+      break;
+    case 'v':
+      mode = mode | VERBOSE;
       break;
     default:
       break;
     }
+  }
+
+  if (mode & VERBOSE & RECURSIVELY) {
+    printf("option: recursively cleaning\n");
   }
 
   if (argc == optind) {
@@ -44,7 +53,6 @@ int main(int argc, char *argv[])
   } else {
     char dir[BUFSIZE] = "";
     strcpy(dir, argv[optind]);
-    printf("clean %s\n", dir);
     if (*(dir + strlen(dir) - 1) == '/') {
       *(dir + strlen(dir) - 1) = 0;
     }
@@ -73,9 +81,11 @@ int dirclean(char *dir)
       char delfile[1024];
       sprintf(delfile, "%s/%s", dir, ent->d_name);
       remove(delfile);
-      printf("Delete: %s/%s\n", dir, ent->d_name);
+      if (mode & VERBOSE) {
+	printf("Delete: %s/%s\n", dir, ent->d_name);
+      }
     }
-    if (mode == RECURSIVELY && ent->d_type == DT_DIR) {
+    if ((mode & RECURSIVELY) && ent->d_type == DT_DIR) {
       char child[BUFSIZE];
       sprintf(child, "%s/%s", dir, ent->d_name);
       dirclean(child);
