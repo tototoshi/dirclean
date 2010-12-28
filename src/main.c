@@ -1,5 +1,5 @@
 /*
-  カレントディレクトリのUnixバックアップファイル(*~)を削除する
+  Unixバックアップファイル(*~)を削除する
 */
 
 #include <stdio.h>
@@ -82,12 +82,3 @@ int is_unix_backup(char *f)
   }
   return 1;
 }
-
-
-
-
-
-
-
-
-
