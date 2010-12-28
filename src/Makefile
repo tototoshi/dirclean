@@ -45,7 +45,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_dirclean_OBJECTS = main.$(OBJEXT)
+am_dirclean_OBJECTS = dirclean.$(OBJEXT)
 dirclean_OBJECTS = $(am_dirclean_OBJECTS)
 dirclean_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)
@@ -147,7 +147,7 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-dirclean_SOURCES = main.c
+dirclean_SOURCES = dirclean.c
 all: all-am
 
 .SUFFIXES:
@@ -229,7 +229,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/main.Po
+include ./$(DEPDIR)/dirclean.Po
 
 .c.o:
 	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

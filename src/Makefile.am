@@ -1,2 +1,2 @@
 bin_PROGRAMS = dirclean
-dirclean_SOURCES = main.c
+dirclean_SOURCES = dirclean.c
