@@ -1,6 +1,6 @@
 /*
   カレントディレクトリのUnixバックアップファイル(*~)を削除する
- */
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,15 +9,37 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+#define RECURSIVELY 1
+int mode = 0;
+extern int optind;
+
 int main(int argc, char *argv[])
 {
-  char cd[1024] = "";
+  int c;
 
-  if (argc == 1) {
+  while ((c = getopt (argc, argv, "r")) != -1) {
+    switch (c) {
+    case 'r':
+      mode = RECURSIVELY;
+      printf("option: recursively cleaning\n");
+      break;
+    default:
+      break;
+    }
+  }
+
+  if (argc == optind) {
+    char cd[1024] = "";
     getcwd(cd, sizeof(cd));
     return dirclean(cd);
   } else {
-    dirclean(argv[1]);
+    char dir[1024] = "";
+    strcpy(dir, argv[optind]);
+    printf("clean %s\n", dir);
+    if (*(dir + strlen(dir) - 1) == '/') {
+      *(dir + strlen(dir) - 1) = 0;
+    }
+    dirclean(dir);
   }
 }
 
@@ -34,22 +56,18 @@ int dirclean(char *dir)
 
   while ((ent = readdir(d_ptr)) != NULL) {
     if (strcmp(ent->d_name, ".") == 0 ||
-        strcmp(ent->d_name, "..") == 0) {
+	strcmp(ent->d_name, "..") == 0) {
       continue;
     }
     if (ent->d_type == DT_REG &&
-        is_unix_backup(ent->d_name) == 0) {
+	is_unix_backup(ent->d_name) == 0) {
       remove(ent->d_name);
       printf("Delete: %s/%s\n", dir, ent->d_name);
     }
-    if (ent->d_type == DT_DIR) {
-      {
-        char child[1024];
-        strcpy(child, dir);
-        strcat(child, "/");
-        strcat(child, ent->d_name);
-        dirclean(child);
-      }
+    if (mode == RECURSIVELY && ent->d_type == DT_DIR) {
+      char child[1024];
+      sprintf(child, "%s/%s", dir, ent->d_name);
+      dirclean(child);
     }
   }
 
