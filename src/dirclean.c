@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+#define BUFSIZE 1024
 #define RECURSIVELY 1
 int mode = 0;
 extern int optind;
@@ -29,11 +30,11 @@ int main(int argc, char *argv[])
   }
 
   if (argc == optind) {
-    char cd[1024] = "";
+    char cd[BUFSIZE] = "";
     getcwd(cd, sizeof(cd));
     return dirclean(cd);
   } else {
-    char dir[1024] = "";
+    char dir[BUFSIZE] = "";
     strcpy(dir, argv[optind]);
     printf("clean %s\n", dir);
     if (*(dir + strlen(dir) - 1) == '/') {
@@ -65,7 +66,7 @@ int dirclean(char *dir)
       printf("Delete: %s/%s\n", dir, ent->d_name);
     }
     if (mode == RECURSIVELY && ent->d_type == DT_DIR) {
-      char child[1024];
+      char child[BUFSIZE];
       sprintf(child, "%s/%s", dir, ent->d_name);
       dirclean(child);
     }
