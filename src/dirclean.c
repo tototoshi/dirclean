@@ -18,11 +18,16 @@ int main(int argc, char *argv[])
 {
   int c;
 
-  while ((c = getopt (argc, argv, "r")) != -1) {
+  while ((c = getopt (argc, argv, "rh")) != -1) {
     switch (c) {
     case 'r':
       mode = RECURSIVELY;
       printf("option: recursively cleaning\n");
+      break;
+    case 'h':
+      printf("Usage: dirclean [-r] [directory]\n");
+      printf("\t-r:\tcleaning recursively\n");
+      return 0;
       break;
     default:
       break;
