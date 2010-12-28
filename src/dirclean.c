@@ -10,8 +10,11 @@
 #include <dirent.h>
 
 #define BUFSIZE 1024
+
+#define NORMAL 0
 #define RECURSIVELY 1
-int mode = 0;
+
+int mode = NORMAL;
 extern int optind;
 
 int main(int argc, char *argv[])
@@ -22,7 +25,7 @@ int main(int argc, char *argv[])
     switch (c) {
     case 'r':
       mode = RECURSIVELY;
-      printf("option: recursively cleaning\n");
+      /* printf("option: recursively cleaning\n"); */
       break;
     case 'h':
       printf("Usage: dirclean [-r] [directory]\n");
