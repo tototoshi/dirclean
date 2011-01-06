@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <errno.h>
 
 #define BUFSIZE 1024
 
@@ -18,6 +19,7 @@
 int mode = NORMAL;
 
 extern int optind;
+extern int errno;
 
 int main(int argc, char *argv[])
 {
@@ -67,6 +69,10 @@ int dirclean(char *dir)
 
   d_ptr = opendir(dir);
   if (d_ptr == NULL) {
+    if (errno == EACCES) {
+      perror("Skip");
+      return(1);
+    }
     perror("Error");
     exit(1);
   }
