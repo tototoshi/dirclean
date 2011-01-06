@@ -79,16 +79,16 @@ int dirclean(char *dir)
 
   while ((ent = readdir(d_ptr)) != NULL) {
     if (strcmp(ent->d_name, ".") == 0 ||
-	strcmp(ent->d_name, "..") == 0) {
+        strcmp(ent->d_name, "..") == 0) {
       continue;
     }
     if (ent->d_type == DT_REG &&
-	is_unix_backup(ent->d_name) == 0) {
+        is_unix_backup(ent->d_name) == 0) {
       char delfile[1024];
       sprintf(delfile, "%s/%s", dir, ent->d_name);
       remove(delfile);
       if (mode & VERBOSE) {
-	printf("Delete: %s/%s\n", dir, ent->d_name);
+        printf("Delete: %s/%s\n", dir, ent->d_name);
       }
     }
     if ((mode & RECURSIVELY) && ent->d_type == DT_DIR) {
